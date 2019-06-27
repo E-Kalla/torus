@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+def my_print_intro():
+    print ("USAGE\n    ./105torus opt a0 a1 a2 a3 a4 n\n")
+    print ("DESCRIPTION\n    opt       method option:\n                  1 for the bisection method\n                  2 for Newton’s mehod\n                  3 for the secant method\n    a[0-4]    coefficients of the equation\n    n         precision (the application of the polynomial to the solution should\n              be smaller than 10ˆ-n)")
+    
+def dicho(a0, a1, a2, a3, a4, n):
+    a = 0
+    b = 1
+    a0 = int(a0)
+    a1 = int(a1)
+    a2 = int(a2)
+    a3 = int(a3)
+    a4 = int(a4)
+    nb = 0
+    prec = int(n)
+    i = 1
+
+    while (i < 100):
+        nb = (a + b)/2
+        if (round(a * pow(10, prec)) == round(b * pow(10, prec))):
+            return (0)
+        else :
+            if (i < 6):
+                print("x = %g" % nb)
+            else:
+                print("x = %.*f" % (prec,nb))
+        i += 1
+        fnb = (a4) * pow(nb,4) + (a3) * pow(nb,3) + (a2) *pow(nb,2) + a1 * nb + a0
+        snb = (a4) * pow(a,4) + (a3) * pow(a,3) + (a2) * pow(a,2) + a1 * a + a0
+        if (fnb * snb) < 0:
+            b = nb
+        else:
+            a = nb
+ 
+
+def new(a0, a1, a2, a3, a4, n):
+    nb = 0.5
+    fnb = 0.0
+    snb = 0.0
+    x = 0.0
+    i = 1
+    prec = int(n)
+
+    print("x = %g" % nb)
+    while (i < 50):
+        fnb = (int(a4) * pow(nb,4)) + (int(a3) * pow(nb,3)) + (int(a2) * pow(nb,2)) + (int(a1) * nb) + int(a0)
+        snb = (4 * (int(a4) * pow(nb,3))) + (3 * (int(a3) * pow(nb,2))) + (2 * (int(a2) * nb)) + int(a1)
+        if (snb == 0):
+            syst.stderr.write("Division by zero\n")
+            sys.exit(84)
+        x = nb - (fnb / snb)
+        if (round(nb * pow(10, prec)) == round(x * pow(10, prec))):
+            return(0)
+        if (i < 6):
+            print ("x = %g" % x)
+        else :
+            print ("x = %.*f" % (prec,x))
+        nb = x
+        i += 1
+
+def secant(a0, a1, a2, a3, a4, n):
+    a = 0
+    b = 1
+    x = 0.0
+    i = 0
+    prec = int(n)
+    temp = 0
+
+    while (i < 100) :
+        if (round(a * pow(10, prec)) == round(b * pow(10, prec))):
+            return(0)        
+        fnb = (int(a4) * pow(a, 4)) + (int(a3) * pow(a, 3)) + (int(a2) * pow(a, 2)) + (int(a1) * a) + int(a0)
+        snb = (int(a4) * pow(b, 4)) + (int(a3) * pow(b, 3)) + (int(a2) * pow(b, 2)) + (int(a1) * b) + int(a0)
+        if ((snb - fnb) == 0):
+            syst.stderr.write("Division by zero\n")
+            sys.exit(84)
+        x = b - ((snb * (b - a)) / (snb - fnb))
+        if (i == 0) :
+            print("x = 0.5")
+        else :
+            if (i < 6):
+                print ("x = %g" % x)
+            else :
+                print("x = %.*f" % (prec,x))
+        temp = x
+        a = b
+        b = x
+        i += 1
+    
+def torus(opt, a0, a1, a2, a3, a4, n):
+
+    if (int(opt) == 1) :
+        dicho(a0,a1,a2,a3,a4,n)
+    if (int(opt) == 2) :
+        new(a0,a1,a2,a3,a4,n)
+    if (int(opt) == 3) :
+        secant(a0,a1,a2,a3,a4,n)
+        
+def main():
+    try:
+        if len(sys.argv) == 2:
+            if sys.argv[1] == "-h":
+                my_print_intro()
+                return (0)
+        if len(sys.argv) != 8:
+            sys.stderr.write("Your data are incorrect(1)\n")
+            sys.exit(84)    
+        if int(sys.argv[7]) < 0:
+            sys.stderr.write("Your data are incorrect\n")
+            sys.exit(84)
+        if (sys.argv[7]):
+            torus(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7])
+            return (0)
+        else :
+            sys.stderr.write("Your data are incorrect\n")
+            sys.exit(84)
+    except ValueError:
+        sys.stderr.write("Your data are incorrect\n")
+        sys.exit(84)
+
+
+if __name__ == '__main__':
+    main()
